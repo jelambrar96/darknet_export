@@ -441,12 +441,12 @@ void run_export(char *cfgfile, char *weightfile, char *out)
         layer l = net.layers[i];
         printf("n: %d, type %d\n", i, l.type);
         if(l.type == CONVOLUTIONAL) {
-            int wg_num = l.n*l.c*l.size*l.size;
+            int wg_num = (l.groups <=  1)? l.n*l.c*l.size*l.size : l.n*(l.c/l.groups)*l.size*l.size;
             int b_num = l.n;
          
             printf("Convolutional\n");
-            printf("weights: %d, biases: %d, batch_normalize: %d\n",
-            wg_num, b_num, l.batch_normalize);
+            printf("weights: %d, biases: %d, batch_normalize: %d, groups: %d\n",
+            wg_num, b_num, l.batch_normalize, l.groups);
 
             char *file[256];
             sprintf(file, "%s/c%d.bin", out, i);
@@ -515,7 +515,12 @@ void run_export(char *cfgfile, char *weightfile, char *out)
             printf("export UPSAMPLE\n");
             // no weights 
 
-        } else {
+        }
+        else if(l.type == MAXPOOL) {
+            printf("export MAXPOOL\n");
+            // no weights 
+        } 
+        else {
             assert(0 == "layer type not supported for export");
         }
         printf("\n");
