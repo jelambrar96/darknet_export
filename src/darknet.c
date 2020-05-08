@@ -506,21 +506,19 @@ void run_export(char *cfgfile, char *weightfile, char *out)
         } else if(l.type == SHORTCUT) {
             printf("export SHORTCUT\n");
             // no weights
-            
         } else if(l.type == ROUTE) {
             printf("export ROUTE\n");
             // no weights
-
         } else if(l.type == UPSAMPLE) {
             printf("export UPSAMPLE\n");
             // no weights 
-
-        }
-        else if(l.type == MAXPOOL) {
+        } else if(l.type == MAXPOOL) {
             printf("export MAXPOOL\n");
             // no weights 
-        } 
-        else {
+        } else if(l.type == REORG || l.type == REORG_OLD) {
+            printf("export REORG\n");
+            // no weights          
+        } else {
             assert(0 == "layer type not supported for export");
         }
         printf("\n");
