@@ -2,6 +2,12 @@
 this is a fork of alexey darknet
 tk version of yolos are in *mycfg/* folder
 
+### Compile
+Compile with make without modify anything in the makefile, it will use only CPU
+```
+make
+```
+
 ### Train
 ```
 wget https://pjreddie.com/media/files/darknet53.conv.74 # pretrained weights
@@ -21,4 +27,5 @@ dont use pretrained weights with 1 channel input (for instance with yolo3_flir)
 ```
 warning: 
 - out/path should already be present and empty
+- debug is exported to "debug/" folder
 - if you need debug export of every layer ouput you MUST compile in CPU mode

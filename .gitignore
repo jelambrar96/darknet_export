@@ -9,6 +9,7 @@
 *.dll
 *.lib
 *.dylib
+*.bin
 mnist/
 data/
 caffe/
