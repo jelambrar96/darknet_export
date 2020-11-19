@@ -107,7 +107,13 @@ void *detect_in_thread(void *ptr)
             dets = get_network_boxes(&net, get_width_mat(in_img), get_height_mat(in_img), demo_thresh, demo_thresh, 0, 1, &nboxes, 1); // letter box
         else
             dets = get_network_boxes(&net, net.w, net.h, demo_thresh, demo_thresh, 0, 1, &nboxes, 0); // resized
-
+        
+        //const float nms = .45;
+        //if (nms) {
+        //    if (l.nms_kind == DEFAULT_NMS) do_nms_sort(dets, nboxes, l.classes, nms);
+        //    else diounms_sort(dets, nboxes, l.classes, nms, l.nms_kind, l.beta_nms);
+        //}
+        
         custom_atomic_store_int(&run_detect_in_thread, 0);
     }
 
@@ -179,8 +185,11 @@ void demo(char *cfgfile, char *weightfile, float thresh, float hier_thresh, int 
 
     int i;
     for (i = 0; i < net.n; ++i) {
-        layer l = net.layers[i];
-        if (l.type == YOLO) l.mean_alpha = 1.0 / avg_frames;
+        layer lc = net.layers[i];
+        if (lc.type == YOLO) {
+            lc.mean_alpha = 1.0 / avg_frames;
+            l = lc;
+        }
     }
 
     if (l.classes != demo_classes) {
@@ -261,6 +270,8 @@ void demo(char *cfgfile, char *weightfile, float thresh, float hier_thresh, int 
                 if (l.nms_kind == DEFAULT_NMS) do_nms_sort(local_dets, local_nboxes, l.classes, nms);
                 else diounms_sort(local_dets, local_nboxes, l.classes, nms, l.nms_kind, l.beta_nms);
             }
+
+            if (l.embedding_size) set_track_id(local_dets, local_nboxes, demo_thresh, l.sim_thresh, l.track_ciou_norm, l.track_history_size, l.dets_for_track, l.dets_for_show);
 
             //printf("\033[2J");
             //printf("\033[1;1H");

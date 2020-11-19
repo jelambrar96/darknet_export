@@ -261,11 +261,11 @@ void find_replace_extension(char *str, char *orig, char *rep, char *output)
 
 void replace_image_to_label(const char* input_path, char* output_path)
 {
-    find_replace(input_path, "/images/train2014/", "/labels/train2014/", output_path);    // COCO
-    find_replace(output_path, "/images/val2014/", "/labels/val2014/", output_path);        // COCO
+    find_replace(input_path, "/images/train2017/", "/labels/train2017/", output_path);    // COCO
+    find_replace(output_path, "/images/val2017/", "/labels/val2017/", output_path);        // COCO
     find_replace(output_path, "/JPEGImages/", "/labels/", output_path);    // PascalVOC
-    find_replace(output_path, "\\images\\train2014\\", "\\labels\\train2014\\", output_path);    // COCO
-    find_replace(output_path, "\\images\\val2014\\", "\\labels\\val2014\\", output_path);        // COCO
+    find_replace(output_path, "\\images\\train2017\\", "\\labels\\train2017\\", output_path);    // COCO
+    find_replace(output_path, "\\images\\val2017\\", "\\labels\\val2017\\", output_path);        // COCO
     find_replace(output_path, "\\JPEGImages\\", "\\labels\\", output_path);    // PascalVOC
     //find_replace(output_path, "/images/", "/labels/", output_path);    // COCO
     //find_replace(output_path, "/VOC2007/JPEGImages/", "/VOC2007/labels/", output_path);        // PascalVOC
@@ -1030,4 +1030,15 @@ int make_directory(char *path, int mode)
 #else
     return mkdir(path, mode);
 #endif
+}
+
+unsigned long custom_hash(char *str)
+{
+    unsigned long hash = 5381;
+    int c;
+
+    while (c = *str++)
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+    return hash;
 }
